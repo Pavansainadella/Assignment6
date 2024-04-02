@@ -1,0 +1,56 @@
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class MedicalTestResultsAnalysis {
+    public static Map<String, Double> analyzeTestResults(List<Double> results) {
+        Map<String, Double> result = new HashMap<>();
+        result.put("Normal", 0.0);
+        result.put("Borderline", 0.0);
+        result.put("High", 0.0);
+        // Add more ranges as needed
+        
+        for (double res : results) {
+            if (res >= 0 && res < 50) {
+                result.put("Normal", result.get("Normal") + res);
+            } else if (res >= 50 && res < 100) {
+                result.put("Borderline", result.get("Borderline") + res);
+            } else if (res >= 100) {
+                result.put("High", result.get("High") + res);
+            }
+            // Add more conditions for other ranges
+        }
+        
+        // Calculate average value for each result range
+        for (String range : result.keySet()) {
+            double valueSum = result.get(range);
+            int count = getCountForRange(results, range);
+            result.put(range, valueSum / count);
+        }
+        
+        return result;
+    }
+    
+    private static int getCountForRange(List<Double> results, String range) {
+        int count = 0;
+        for (double res : results) {
+            if (range.equals("Normal") && res >= 0 && res < 50) {
+                count++;
+            } else if (range.equals("Borderline") && res >= 50 && res < 100) {
+                count++;
+            } else if (range.equals("High") && res >= 100) {
+                count++;
+            }
+            // Add more conditions for other ranges
+        }
+        return count;
+    }
+
+    public static void main(String[] args) {
+        List<Double> results = List.of(30.0, 65.0, 110.0, 40.0);
+        Map<String, Double> analysisResult = analyzeTestResults(results);
+        for (Map.Entry<String, Double> entry : analysisResult.entrySet()) {
+            System.out.println(entry.getKey() + ": Avg Value - " + entry.getValue());
+        }
+    }
+}
