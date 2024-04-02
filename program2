@@ -1,0 +1,59 @@
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class WeatherDataAnalysis {
+    public static Map<String, Double> analyzeWeather(List<Double> temperatures, List<Double> humidities) {
+        Map<String, Double> result = new HashMap<>();
+        result.put("<0°C", 0.0);
+        result.put("0-10°C", 0.0);
+        result.put("10-20°C", 0.0);
+        // Add more ranges as needed
+        
+        for (int i = 0; i < temperatures.size(); i++) {
+            double temp = temperatures.get(i);
+            double humidity = humidities.get(i);
+            if (temp < 0) {
+                result.put("<0°C", result.get("<0°C") + humidity);
+            } else if (temp >= 0 && temp < 10) {
+                result.put("0-10°C", result.get("0-10°C") + humidity);
+            } else if (temp >= 10 && temp < 20) {
+                result.put("10-20°C", result.get("10-20°C") + humidity);
+            }
+            // Add more conditions for other ranges
+        }
+        
+        // Calculate average humidity for each temperature range
+        for (String range : result.keySet()) {
+            double humiditySum = result.get(range);
+            int count = getCountForRange(temperatures, range);
+            result.put(range, humiditySum / count);
+        }
+        
+        return result;
+    }
+    
+    private static int getCountForRange(List<Double> temperatures, String range) {
+        int count = 0;
+        for (double temp : temperatures) {
+            if (range.equals("<0°C") && temp < 0) {
+                count++;
+            } else if (range.equals("0-10°C") && temp >= 0 && temp < 10) {
+                count++;
+            } else if (range.equals("10-20°C") && temp >= 10 && temp < 20) {
+                count++;
+            }
+            // Add more conditions for other ranges
+        }
+        return count;
+    }
+
+    public static void main(String[] args) {
+        List<Double> temperatures = List.of(-5.0, 3.0, 15.0, 22.0);
+        List<Double> humidities = List.of(60.0, 70.0, 80.0, 75.0);
+        Map<String, Double> analysisResult = analyzeWeather(temperatures, humidities);
+        for (Map.Entry<String, Double> entry : analysisResult.entrySet()) {
+            System.out.println(entry.getKey() + ": Avg Humidity - " + entry.getValue());
+        }
+    }
+}
