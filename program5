@@ -1,0 +1,54 @@
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class HousingPricesAnalysis {
+    public static Map<String, Double> analyzePrices(List<Double> prices, List<Double> squareFootages) {
+        Map<String, Double> result = new HashMap<>();
+        result.put("$100,000-200,000", 0.0);
+        result.put("$200,000-300,000", 0.0);
+        // Add more ranges as needed
+        
+        for (int i = 0; i < prices.size(); i++) {
+            double price = prices.get(i);
+            double squareFootage = squareFootages.get(i);
+            if (price >= 100000 && price < 200000) {
+                result.put("$100,000-200,000", result.get("$100,000-200,000") + squareFootage);
+            } else if (price >= 200000 && price < 300000) {
+                result.put("$200,000-300,000", result.get("$200,000-300,000") + squareFootage);
+            }
+            // Add more conditions for other ranges
+        }
+        
+        // Calculate average square footage for each price range
+        for (String range : result.keySet()) {
+            double squareFootageSum = result.get(range);
+            int count = getCountForRange(prices, range);
+            result.put(range, squareFootageSum / count);
+        }
+        
+        return result;
+    }
+    
+    private static int getCountForRange(List<Double> prices, String range) {
+        int count = 0;
+        for (double price : prices) {
+            if (range.equals("$100,000-200,000") && price >= 100000 && price < 200000) {
+                count++;
+            } else if (range.equals("$200,000-300,000") && price >= 200000 && price < 300000) {
+                count++;
+            }
+            // Add more conditions for other ranges
+        }
+        return count;
+    }
+
+    public static void main(String[] args) {
+        List<Double> prices = List.of(150000.0, 220000.0, 180000.0, 250000.0);
+        List<Double> squareFootages = List.of(1200.0, 1800.0, 1500.0, 2000.0);
+        Map<String, Double> analysisResult = analyzePrices(prices, squareFootages);
+        for (Map.Entry<String, Double> entry : analysisResult.entrySet()) {
+            System.out.println(entry.getKey() + ": Avg Square Footage - " + entry.getValue());
+        }
+    }
+}
