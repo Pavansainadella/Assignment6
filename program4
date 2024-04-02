@@ -1,0 +1,38 @@
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class EmployeeWorkHoursAnalysis {
+    public static Map<String, Double> analyzeWorkHours(List<Double> hoursWorked) {
+        Map<String, Double> result = new HashMap<>();
+        result.put("More than 40 hours", 0.0);
+        result.put("Exactly 40 hours", 0.0);
+        result.put("Less than 40 hours", 0.0);
+        
+        for (double hours : hoursWorked) {
+            if (hours > 40) {
+                result.put("More than 40 hours", result.get("More than 40 hours") + hours);
+            } else if (hours == 40) {
+                result.put("Exactly 40 hours", result.get("Exactly 40 hours") + hours);
+            } else {
+                result.put("Less than 40 hours", result.get("Less than 40 hours") + hours);
+            }
+        }
+        
+        // Calculate average hours worked per day for each group
+        for (String group : result.keySet()) {
+            double totalHours = result.get(group);
+            result.put(group, totalHours / 7); // Assuming 7 days in a week
+        }
+        
+        return result;
+    }
+
+    public static void main(String[] args) {
+        List<Double> hoursWorked = List.of(45.0, 38.0, 40.0, 42.0, 37.0, 39.0, 41.0);
+        Map<String, Double> analysisResult = analyzeWorkHours(hoursWorked);
+        for (Map.Entry<String, Double> entry : analysisResult.entrySet()) {
+            System.out.println(entry.getKey() + ": Avg Hours per Day - " + entry.getValue());
+        }
+    }
+}
