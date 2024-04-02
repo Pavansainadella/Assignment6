@@ -1,0 +1,31 @@
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class ProductSalesAnalysis {
+    public static Map<String, Double> analyzeSales(List<Double> sales) {
+        Map<String, Double> result = new HashMap<>();
+        result.put("$0-50", 0.0);
+        result.put("$50-100", 0.0);
+        result.put("$100-200", 0.0);
+        for (double sale : sales) {
+            if (sale >= 0 && sale < 50) {
+                result.put("$0-50", result.get("$0-50") + sale);
+            } else if (sale >= 50 && sale < 100) {
+                result.put("$50-100", result.get("$50-100") + sale);
+            } else if (sale >= 100 && sale < 200) {
+                result.put("$100-200", result.get("$100-200") + sale);
+            }
+                   }
+        
+        return result;
+    }
+
+    public static void main(String[] args) {
+        List<Double> sales = List.of(25.0, 75.0, 150.0, 180.0);
+        Map<String, Double> analysisResult = analyzeSales(sales);
+        for (Map.Entry<String, Double> entry : analysisResult.entrySet()) {
+            System.out.println(entry.getKey() + ": $" + entry.getValue());
+        }
+    }
+}
